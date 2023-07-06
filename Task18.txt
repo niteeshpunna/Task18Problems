@@ -1,0 +1,151 @@
+
+Problem-1: Automate Facebook Signup process
+Code:
+package GuviScripts;
+
+import static org.testng.Assert.assertEquals;
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class task18Problems {
+
+		WebDriver d;
+		@BeforeMethod
+		public void setUp()
+		{
+			// Launch a browser
+		d= new ChromeDriver();
+		d.manage().window().maximize();
+		d.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
+		d.manage().deleteAllCookies();
+		}
+		@AfterMethod
+		public void closeBrowser()
+		{
+			d.quit();
+		}
+		@Test
+		public void testSet() throws Exception {
+			
+			d.get("https://www.facebook.com/"); // Launch the browser
+			
+			assertEquals(d.getTitle(),"Facebook – log in or sign up"); // Verify the page with title
+			
+			WebElement newAccount = d.findElement(By.linkText("Create new account")); //click on Create new account
+			newAccount.click();
+			
+			Thread.sleep(2000);
+			
+			WebElement firstname =d.findElement(By.name("firstname")); // Enter first name
+			firstname.sendKeys("nitsh");
+			
+			WebElement lastname = d.findElement(By.name("lastname")); // Enter Last Name
+			lastname.sendKeys("kur");
+			
+			WebElement validemail = d.findElement(By.xpath("//input[@aria-label='Mobile number or email address']")); // Enter valid email
+			validemail.sendKeys("TestUser2365463@gmail.com");
+			// //input[starts-with(@placeholder,'Mobile')]  
+			
+			Thread.sleep(1500);
+			
+			WebElement Reentermail = d.findElement(By.xpath("//input[@aria-label='Re-enter email address']"));
+			Reentermail.sendKeys("TestUser2365463@gmail.com");
+			
+			WebElement password = d.findElement(By.xpath("//input[@id='password_step_input']")); // enter valid password 
+			password.sendKeys("Demo@123");
+			
+			Thread.sleep(2000);
+			
+			Select Daydd = new Select(d.findElement(By.id("day"))); // Select date as 11 from drop down
+			Daydd.selectByValue("11");
+			
+			
+			Select monthdd = new Select(d.findElement(By.id("month"))); //Select month as May from drop down
+			monthdd.selectByValue("5");
+			
+			Select yeardd = new Select(d.findElement(By.id("year"))); //Select year as 1985 from drop down
+			yeardd.selectByVisibleText("1985");
+			
+			d.findElement(By.xpath("//label[contains(.,'Male')]")).click(); // Select Gender
+			
+			Thread.sleep(2000);
+			
+			d.findElement(By.name("websubmit")).click(); // click on submit button
+			
+			Thread.sleep(2000);
+			
+			 // Verify the name of account if successfully registered
+			WebElement textname = d.findElement(By.xpath("//span[contains(text(),'Nitsh')]")); 
+			assertEquals(textname.getText(),"Nitsh");
+			
+			Thread.sleep(2000);
+		}
+}
+
+------------------------------------------------------------------------------------------------------------
+
+Problem-2: Automate Drag and Drop operation using Selenium
+
+package GuviScripts;
+
+import static org.testng.Assert.assertEquals;
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class Task18Problem2 {
+	WebDriver d;
+	@BeforeMethod
+	public void setUp()
+	{
+		// Launch a browser
+	d= new ChromeDriver();
+	d.manage().window().maximize();
+	d.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
+	d.manage().deleteAllCookies();
+	}
+	@AfterMethod
+	public void closeBrowser()
+	{
+		d.quit();
+	}
+	@Test
+	public void testSet() throws Exception {
+		d.get("https://jqueryui.com/droppable/"); // Launch the browser
+		
+		assertEquals(d.getTitle(),"Droppable | jQuery UI"); // Verify the page with title
+		
+		d.switchTo().frame(d.findElement(By.className("demo-frame"))); // Switching focus to inside frame
+		
+		WebElement drag = d.findElement(By.id("draggable")); // Locating source element
+		
+		WebElement drop = d.findElement(By.id("droppable")); // Locating target element
+		
+		// To implement mouse actions, we create object to Actions class
+		Actions a = new Actions(d);
+		a.dragAndDrop(drag, drop).perform(); //implementing dragNdrop action
+		
+		String colorAfterDnD = drop.getCssValue("color");
+		assertEquals(colorAfterDnD,"rgba(119, 118, 32, 1)"); // Verifying the color property of target element
+		
+		assertEquals(drop.getText(),"Dropped!"); //Verifying the text after dragNdrop action
+		Thread.sleep(2000);
+	}
+}
